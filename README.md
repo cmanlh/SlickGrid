@@ -1,3 +1,9 @@
+Forked this repo from mleibman and merged new update from 6pac's branch, but find out there are too many codes need to be restructured for new features. 
+
+So I will keep this repo and add my patch for my specific app requirements.
+
+# 6pac README follows:
+
 ## This is the 6pac slickgrid repo
 
 I am maintaining this branch as a separate 'alternative master'. Check [my wiki](https://github.com/6pac/SlickGrid/wiki) for details.
