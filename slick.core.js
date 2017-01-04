@@ -149,39 +149,40 @@
 
   function EventHandler() {
     var handlers = [];
+    var _this = this; // added by cmanlh, for safe chaining calls
 
-    this.subscribe = function (event, handler) {
+    _this.subscribe = function (event, handler) {
       handlers.push({
         event: event,
         handler: handler
       });
       event.subscribe(handler);
 
-      return this;  // allow chaining
+      return _this;  // allow chaining
     };
 
-    this.unsubscribe = function (event, handler) {
+    _this.unsubscribe = function (event, handler) {
       var i = handlers.length;
       while (i--) {
         if (handlers[i].event === event &&
-            handlers[i].handler === handler) {
+          handlers[i].handler === handler) {
           handlers.splice(i, 1);
           event.unsubscribe(handler);
           return;
         }
       }
 
-      return this;  // allow chaining
+      return _this;  // allow chaining
     };
 
-    this.unsubscribeAll = function () {
+    _this.unsubscribeAll = function () {
       var i = handlers.length;
       while (i--) {
         handlers[i].event.unsubscribe(handlers[i].handler);
       }
       handlers = [];
 
-      return this;  // allow chaining
+      return _this;  // allow chaining
     }
   }
 
@@ -251,7 +252,7 @@
      */
     this.contains = function (row, cell) {
       return row >= this.fromRow && row <= this.toRow &&
-          cell >= this.fromCell && cell <= this.toCell;
+        cell >= this.fromCell && cell <= this.toCell;
     };
 
     /***
@@ -364,9 +365,9 @@
    */
   Group.prototype.equals = function (group) {
     return this.value === group.value &&
-        this.count === group.count &&
-        this.collapsed === group.collapsed &&
-        this.title === group.title;
+      this.count === group.count &&
+      this.collapsed === group.collapsed &&
+      this.title === group.title;
   };
 
   /***
