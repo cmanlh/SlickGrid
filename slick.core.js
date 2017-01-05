@@ -164,18 +164,19 @@
 
 	function EventHandler() {
 		var handlers = [];
+		var _this = this;
 
-		this.subscribe = function (event, handler) {
+		_this.subscribe = function (event, handler) {
 			handlers.push({
 				event: event,
 				handler: handler
 			});
 			event.subscribe(handler);
 
-			return this; // allow chaining
+			return _this; // allow chaining
 		};
 
-		this.unsubscribe = function (event, handler) {
+		_this.unsubscribe = function (event, handler) {
 			var i = handlers.length;
 			while (i--) {
 				if (handlers[i].event === event && handlers[i].handler === handler) {
@@ -185,17 +186,17 @@
 				}
 			}
 
-			return this; // allow chaining
+			return _this; // allow chaining
 		};
 
-		this.unsubscribeAll = function () {
+		_this.unsubscribeAll = function () {
 			var i = handlers.length;
 			while (i--) {
 				handlers[i].event.unsubscribe(handlers[i].handler);
 			}
 			handlers = [];
 
-			return this; // allow chaining
+			return _this; // allow chaining
 		}
 	}
 
