@@ -686,6 +686,14 @@ if (typeof Slick === "undefined") {
 			}
 		}
 
+		/**
+		 * added by cmanlh
+		 * 
+		 * add grid option 'handleSortOutFramework:false' to indicate that the slickgrid support column sorting default
+		 * 
+		 * add column option 'sort' to support column sorting default. the option 'sort' suport string('number,'string',default is 'string')
+		 * & and column value compare function
+		 */
 		function setupColumnSort() {
 			$headers.click(function (e) {
 				// temporary workaround for a bug in jQuery 1.7.1 (http://bugs.jquery.com/ticket/11328)
@@ -716,49 +724,102 @@ if (typeof Slick === "undefined") {
 						}
 					}
 
-					if (e.metaKey && options.multiColumnSort) {
-						if (sortOpts) {
-							sortColumns.splice(i, 1);
-						}
-					} else {
-						if ((!e.shiftKey && !e.metaKey) || !options.multiColumnSort) {
-							sortColumns = [];
-						}
+					if (!e.shiftKey || !options.multiColumnSort) {
+						sortColumns = [];
+					}
 
-						if (!sortOpts) {
-							sortOpts = {
-								columnId: column.id,
-								sortAsc: column.defaultSortAsc
-							};
-							sortColumns.push(sortOpts);
-						} else if (sortColumns.length == 0) {
-							sortColumns.push(sortOpts);
-						}
+					if (!sortOpts) {
+						sortOpts = {
+							columnId: column.id,
+							sortAsc: column.defaultSortAsc
+						};
+						sortColumns.push(sortOpts);
+					} else if (sortColumns.length == 0) {
+						sortColumns.push(sortOpts);
 					}
 
 					setSortColumns(sortColumns);
 
 					if (!options.multiColumnSort) {
-						trigger(self.onSort, {
-							multiColumnSort: false,
-							sortCol: column,
-							sortAsc: sortOpts.sortAsc,
-							grid: self
-						}, e);
+						if (options.handleSortOutFramework) {
+							trigger(self.onSort, {
+								multiColumnSort: false,
+								sortCol: column,
+								sortAsc: sortOpts.sortAsc,
+								grid: self
+							}, e);
+						} else {
+							data.sort(function (dataRow1, dataRow2) {
+								var field = column.field;
+								var sign = sortOpts.sortAsc ? 1 : -1;
+								var value1 = dataRow1[field], value2 = dataRow2[field];
+								return columnSortMethod(column, sign, value1, value2);
+							});
+
+							self.invalidate();
+							self.render();
+						}
 					} else {
-						trigger(self.onSort, {
-							multiColumnSort: true,
-							sortCols: $.map(sortColumns, function (col) {
+						if (options.handleSortOutFramework) {
+							trigger(self.onSort, {
+								multiColumnSort: true,
+								sortCols: $.map(sortColumns, function (col) {
+									return {
+										sortCol: columns[getColumnIndex(col.columnId)],
+										sortAsc: col.sortAsc
+									};
+								}),
+								grid: self
+							}, e);
+
+						} else {
+							var cols = $.map(sortColumns, function (col) {
 								return {
 									sortCol: columns[getColumnIndex(col.columnId)],
 									sortAsc: col.sortAsc
-								};
-							}),
-							grid: self
-						}, e);
+								}
+							});
+
+							data.sort(function (dataRow1, dataRow2) {
+								for (var i = 0, l = cols.length; i < l; i++) {
+									var field = cols[i].sortCol.field;
+									var sign = cols[i].sortAsc ? 1 : -1;
+									var value1 = dataRow1[field], value2 = dataRow2[field];
+									var result = columnSortMethod(cols[i].sortCol, sign, value1, value2);
+									if (result != 0) {
+										return result;
+									}
+								}
+								return 0;
+							});
+
+							self.invalidate();
+							self.render();
+						}
 					}
 				}
 			});
+		}
+
+		function columnSortMethod(column, sign, value1, value2) {
+			if (typeof (column.sort) === 'function') {
+				return column.sort(value1, value2) * sign;
+			} else {
+				var type = 'string';
+				if (column.sort) {
+					type = column.sort.toLowerCase();
+				}
+				switch (type) {
+					case 'number':
+						if (typeof (value1) == 'number') {
+							return (value1 - value2) * sign;
+						} else {
+							return (parseInt(value1) - parseInt(value2)) * sign;
+						}
+					default:
+						return (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
+				}
+			}
 		}
 
 		function setupColumnReorder() {

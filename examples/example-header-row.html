@@ -1,10 +1,11 @@
 <!DOCTYPE HTML>
 <html>
+
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-  <link rel="stylesheet" href="../css/smoothness/jquery-ui-1.11.3.custom.css" type="text/css"/>
-  <link rel="stylesheet" href="../slick.grid.css" type="text/css"/>
-  <link rel="stylesheet" href="examples.css" type="text/css"/>
+  <link rel="stylesheet" href="../css/smoothness/jquery-ui-1.11.3.custom.css" type="text/css" />
+  <link rel="stylesheet" href="../slick.grid.css" type="text/css" />
+  <link rel="stylesheet" href="examples.css" type="text/css" />
   <style>
     .slick-headerrow-column {
       background: #87ceeb;
@@ -23,23 +24,26 @@
     }
   </style>
 </head>
-<body>
-<div style="position:relative">
-  <div style="width:600px;">
-    <div id="myGrid" style="width:100%;height:500px;"></div>
-  </div>
 
-  <div class="options-panel">
-    <h2>Demonstrates:</h2>
-    <ul>
-      <li>Using a fixed header row to implement column-level filters</li>
-      <li>Type numbers in textboxes to filter grid data</li>
-    </ul>
-      <h2>View Source:</h2>
-      <ul>
-          <li><A href="https://github.com/6pac/SlickGrid/blob/master/examples/example-header-row.html" target="_sourcewindow"> View the source for this example on Github</a></li>
-      </ul>
-  </div>
+<body>
+  <div style="position:relative">
+<div style="width:600px;">
+<div id="myGrid" style="width:100%;height:500px;"></div>
+</div>
+
+<div class="options-panel">
+  <h2>Demonstrates:</h2>
+  <ul>
+    <li>Using a fixed header row to implement column-level filters</li>
+    <li>Type numbers in textboxes to filter grid data</li>
+  </ul>
+  <h2>View Source:</h2>
+  <ul>
+    <li>
+      <A href="https://github.com/6pac/SlickGrid/blob/master/examples/example-header-row.html" target="_sourcewindow"> View the source for this example on Github</a>
+    </li>
+  </ul>
+</div>
 </div>
 
 <script src="../lib/firebugx.js"></script>
@@ -119,12 +123,12 @@
       }
     });
 
-    grid.onHeaderRowCellRendered.subscribe(function(e, args) {
-        $(args.node).empty();
-        $("<input type='text'>")
-           .data("columnId", args.column.id)
-           .val(columnFilters[args.column.id])
-           .appendTo(args.node);
+    grid.onHeaderRowCellRendered.subscribe(function (e, args) {
+      $(args.node).empty();
+      $("<input type='text'>")
+        .data("columnId", args.column.id)
+        .val(columnFilters[args.column.id])
+        .appendTo(args.node);
     });
 
     grid.init();
@@ -136,4 +140,5 @@
   })
 </script>
 </body>
+
 </html>

@@ -39,25 +39,9 @@
 <script>
   var grid;
   var columns = [
-    {
-      id: "title", name: "Title", field: "title", sortable: true, sort: function (val1, val2) {
-        if (val1 == val2) {
-          return 0;
-        }
-
-        if (null == val1 || undefined == val1) {
-          return -1;
-        }
-
-        if (null == val2 || undefined == val2) {
-          return 1;
-        }
-
-        return parseInt(val1.substring(5)) - parseInt(val2.substring(5));
-      }
-    },
+    { id: "title", name: "Title", field: "title", sortable: true },
     { id: "duration", name: "Duration", field: "duration", sortable: true, formatter: dayFormatter },
-    { id: "%", name: "% Complete", field: "percentComplete", sortable: true, sort: 'number' },
+    { id: "%", name: "% Complete", field: "percentComplete", sortable: true },
     { id: "start", name: "Start", field: "start", formatter: dateFormatter, sortable: true },
     { id: "finish", name: "Finish", field: "finish", formatter: dateFormatter, sortable: true },
     { id: "effort-driven", name: "Effort Driven", field: "effortDriven", sortable: true }
@@ -74,7 +58,8 @@
   var options = {
     enableCellNavigation: true,
     enableColumnReorder: false,
-    multiColumnSort: true
+    multiColumnSort: true,
+    handleSortOutFramework: true
 
   };
 
@@ -95,6 +80,25 @@
     }
 
     grid = new Slick.Grid("#myGrid", data, columns, options);
+
+    grid.onSort.subscribe(function (e, args) {
+      var cols = args.sortCols;
+
+      data.sort(function (dataRow1, dataRow2) {
+        for (var i = 0, l = cols.length; i < l; i++) {
+          var field = cols[i].sortCol.field;
+          var sign = cols[i].sortAsc ? 1 : -1;
+          var value1 = dataRow1[field], value2 = dataRow2[field];
+          var result = (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
+          if (result != 0) {
+            return result;
+          }
+        }
+        return 0;
+      });
+      grid.invalidate();
+      grid.render();
+    });
   })
 </script>
 </body>
