@@ -77,6 +77,10 @@ classes should alter those!
 	background: silver;
 }
 
+.slick-header-sortable {
+	cursor: pointer;
+}
+
 .grid-canvas {
 	position: relative;
 	outline: 0;
