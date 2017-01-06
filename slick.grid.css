@@ -50,6 +50,7 @@ classes should alter those!
 	margin-left: 4px;
 	margin-top: 6px;
 	float: left;
+	background: url(images/sort.gif);
 }
 
 .slick-sort-indicator-desc {
