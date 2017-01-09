@@ -830,7 +830,7 @@ if (typeof Slick === "undefined") {
 						} else {
 							return (parseFloat(value1) - parseFloat(value2)) * sign;
 						}
-					case 'localString':
+					case 'localstring':
 						return (value1 == value2 ? 0 : value1.localeCompare(value2)) * sign;
 					default:
 						return (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
