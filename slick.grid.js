@@ -128,6 +128,7 @@ if (typeof Slick === "undefined") {
 		var $footerRow, $footerRowScroller, $footerRowSpacer;
 		var $topPanelScroller;
 		var $topPanel;
+		var $bottomPanel;
 		var $viewport;
 		var $canvas;
 		var $style;
@@ -279,6 +280,11 @@ if (typeof Slick === "undefined") {
 			$viewport.css("overflow-y", options.autoHeight ? "hidden" : "auto");
 
 			$canvas = $("<div class='grid-canvas' />").appendTo($viewport);
+
+			if (options.bottomPanel) {
+				$bottomPanel = $("<div class='slick-bottom-panel ui-state-default' style='overflow:hidden;position:relative;'/>").appendTo($container);
+				$bottomPanel.append(options.bottomPanel);
+			}
 
 			if (options.createFooterRow) {
 				$footerRowScroller = $("<div class='slick-footerrow ui-state-default' style='overflow:hidden;position:relative;' />").appendTo(
@@ -1851,7 +1857,7 @@ if (typeof Slick === "undefined") {
 				- parseFloat($.css($container[0], "paddingBottom", true)) - parseFloat($.css($headerScroller[0], "height"))
 				- getVBoxDelta($headerScroller) - (options.showTopPanel ? options.topPanelHeight + getVBoxDelta($topPanelScroller) : 0)
 				- (options.showHeaderRow ? options.headerRowHeight + getVBoxDelta($headerRowScroller) : 0)
-				- (options.createFooterRow && options.showFooterRow ? options.footerRowHeight + getVBoxDelta($footerRowScroller) : 0);
+				- (options.createFooterRow && options.showFooterRow ? options.footerRowHeight + getVBoxDelta($footerRowScroller) : 0) - (options.bottomPanel ? $.css($bottomPanel[0], 'height', true) : 0);
 		}
 
 		function resizeCanvas() {
@@ -2253,6 +2259,33 @@ if (typeof Slick === "undefined") {
 			lastRenderedScrollTop = scrollTop;
 			lastRenderedScrollLeft = scrollLeft;
 			h_render = null;
+
+			/**
+			 * added by cmanlh
+			 * 
+			 * to support render listener
+			 */
+			try {
+				var _data = [];
+				if ($.isArray(data)) {
+					for (var i = 0, size = data.length; i < size; i++) {
+						if (!rowsCache[i]) {
+							continue;
+						}
+						_data.push(data[i]);
+					}
+				} else {
+					for (var i = 0, size = data.getLength(); i < size; i++) {
+						if (!rowsCache[i]) {
+							continue;
+						}
+						_data.push(data.getItem(i));
+					}
+				}
+				trigger(self.onRender, _data);
+			} catch (error) {
+				console.log(error);
+			}
 		}
 
 		function handleHeaderRowScroll() {
@@ -3729,6 +3762,7 @@ if (typeof Slick === "undefined") {
 			// Events
 			"onScroll": new Slick.Event(),
 			"onSort": new Slick.Event(),
+			"onRender": new Slick.Event(),
 			"onHeaderMouseEnter": new Slick.Event(),
 			"onHeaderMouseLeave": new Slick.Event(),
 			"onHeaderContextMenu": new Slick.Event(),
