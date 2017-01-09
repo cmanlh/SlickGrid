@@ -808,6 +808,14 @@ if (typeof Slick === "undefined") {
 		}
 
 		function columnSortMethod(column, sign, value1, value2) {
+			if ((null == value1 || undefined == value1) && (null != value2 && undefined != value2)) {
+				return -1 * sign;
+			} else if ((null != value1 || undefined != value1) && (null == value2 && undefined == value2)) {
+				return 1 * sign;
+			} else if ((null == value1 || undefined == value1) && (null == value2 && undefined == value2)) {
+				return 0;
+			}
+
 			if (typeof (column.sort) === 'function') {
 				return column.sort(value1, value2) * sign;
 			} else {
@@ -820,8 +828,10 @@ if (typeof Slick === "undefined") {
 						if (typeof (value1) == 'number') {
 							return (value1 - value2) * sign;
 						} else {
-							return (parseInt(value1) - parseInt(value2)) * sign;
+							return (parseFloat(value1) - parseFloat(value2)) * sign;
 						}
+					case 'localString':
+						return (value1 == value2 ? 0 : value1.localeCompare(value2)) * sign;
 					default:
 						return (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
 				}
