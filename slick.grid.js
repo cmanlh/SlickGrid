@@ -1974,6 +1974,29 @@ if (typeof Slick === "undefined") {
 				autosizeColumns();
 			}
 			updateCanvasWidth(false);
+			
+			/**
+			 * added by cmanlh
+			 * 
+			 * to support render listener
+			 */
+			try {
+				var _data = [];
+				if ($.isArray(data)) {
+					_data = data;
+				} else {
+					var _filter = data.getFilter();
+					for (var i = 0, size = data.getLength(); i < size; i++) {
+						if (!_filter(data.getItem(i))) {
+							continue;
+						}
+						_data.push(data.getItem(i));
+					}
+				}
+				trigger(self.onRender, _data);
+			} catch (error) {
+				console.log(error);
+			}
 		}
 
 		function getVisibleRange(viewportTop, viewportLeft) {
@@ -2269,33 +2292,6 @@ if (typeof Slick === "undefined") {
 			lastRenderedScrollTop = scrollTop;
 			lastRenderedScrollLeft = scrollLeft;
 			h_render = null;
-
-			/**
-			 * added by cmanlh
-			 * 
-			 * to support render listener
-			 */
-			try {
-				var _data = [];
-				if ($.isArray(data)) {
-					for (var i = 0, size = data.length; i < size; i++) {
-						if (!rowsCache[i]) {
-							continue;
-						}
-						_data.push(data[i]);
-					}
-				} else {
-					for (var i = 0, size = data.getLength(); i < size; i++) {
-						if (!rowsCache[i]) {
-							continue;
-						}
-						_data.push(data.getItem(i));
-					}
-				}
-				trigger(self.onRender, _data);
-			} catch (error) {
-				console.log(error);
-			}
 		}
 
 		function handleHeaderRowScroll() {
@@ -2988,7 +2984,7 @@ if (typeof Slick === "undefined") {
 				editor: currentEditor,
 				grid: self
 			});
-			currentEditor.destroy();
+			currentEditor.destroy();e
 			currentEditor = null;
 
 			if (activeCellNode) {

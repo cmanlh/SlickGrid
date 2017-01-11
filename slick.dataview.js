@@ -980,6 +980,9 @@
 			"getItems" : getItems,
 			"setItems" : setItems,
 			"setFilter" : setFilter,
+			"getFilter" : function() {
+				return filter;
+			},
 			"sort" : sort,
 			"fastSort" : fastSort,
 			"reSort" : reSort,

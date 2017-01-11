@@ -135,7 +135,6 @@
     grid.init();
 
     grid.onRender.subscribe(function (e, args) {
-      console.log(args);
       var totals = 0;
       for (var i = 0, size = args.length; i < size; i++) {
         totals += args[i][0];
