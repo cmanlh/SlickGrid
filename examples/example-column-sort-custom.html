@@ -48,34 +48,31 @@
         id: "duration",
         name: "Duration",
         field: "duration",
-        sortable: true,
-        formatter: dayFormatter
+        formatter: dayFormatter,
+        sortable: true
       },
       {
         id: "%",
         name: "% Complete",
-        field: "percentComplete",
-        sortable: true
+        field: "percentComplete"
       },
       {
         id: "start",
         name: "Start",
         field: "start",
-        formatter: dateFormatter,
-        sortable: true
+        formatter: dateFormatter
       },
       {
         id: "finish",
         name: "Finish",
         field: "finish",
-        formatter: dateFormatter,
-        sortable: true
+        formatter: dateFormatter
       },
       {
         id: "effort-driven",
         name: "Effort Driven",
         field: "effortDriven",
-        sortable: true
+        width: 100
       }
     ];
 
@@ -92,7 +89,8 @@
       enableColumnReorder: false,
       handleSortOutFramework: true,
       // forceFitColumns: true,
-      leftColumnFrozen: 1
+      // leftColumnFrozen: 1,
+      rightColumnFrozen: 1
     };
 
     $(function () {
