@@ -124,8 +124,10 @@ if (typeof Slick === "undefined") {
 		var uid = "slickgrid_" + Math.round(1000000 * Math.random());
 		var self = this;
 		var $focusSink, $focusSink2;
-		var $paneHeaderL, $paneHeader, $paneHeaderR;
 		var $paneViewportL, $paneViewport, $paneViewportR;
+		var $viewport, $viewportL, $viewportR;
+		var $canvas, $canvasL, $canvasR;
+		var $paneHeaderL, $paneHeader, $paneHeaderR;
 		var $headerScroller, $headerScrollerL, $headerScrollerR;
 		var $headers, $headersL, $headersR;
 		var $headerRow, $headerRowScroller, $headerRowSpacer;
@@ -133,8 +135,6 @@ if (typeof Slick === "undefined") {
 		var $topPanelScroller;
 		var $topPanel;
 		var $bottomPanel;
-		var $viewport, $viewportL, $viewportR;
-		var $canvas, $canvasL, $canvasR;
 		var $style;
 		var $boundAncestors;
 		var stylesheet, columnCssRulesL, columnCssRulesR;
@@ -320,8 +320,8 @@ if (typeof Slick === "undefined") {
 				$canvas = $("<div class='grid-canvas' />").appendTo($viewport);
 			}
 			if (options.rightColumnFrozen) {
-				$paneViewportR = $("<div class='slick-pane slick-pane-left' tabIndex='0' />").appendTo($container);
-				$viewportR = $("<div class='slick-viewport slick-viewport-left' style='width:100%;overflow:auto;outline:0;position:relative;;'>").appendTo($paneViewportR);
+				$paneViewportR = $("<div class='slick-pane slick-pane-right' tabIndex='0' />").appendTo($container);
+				$viewportR = $("<div class='slick-viewport slick-viewport-right' style='width:100%;overflow:auto;outline:0;position:relative;;'>").appendTo($paneViewportR);
 				$viewportR.css("overflow-y", options.autoHeight ? "hidden" : "auto");
 
 				$canvasR = $("<div class='grid-canvas' />").appendTo($viewportR);
@@ -429,7 +429,7 @@ if (typeof Slick === "undefined") {
 
 			if (options.rightColumnFrozen) {
 				$viewportR.css({
-					'overflow-x': 'hidden',
+					'overflow-x': 'scroll',
 					'overflow-y': 'auto'
 				});
 
@@ -646,12 +646,14 @@ if (typeof Slick === "undefined") {
 					}
 				} else {
 					if (options.rightColumnFrozen) {
-						$paneViewport.width(canvasWidth);
+						$paneHeader.width(viewportW - canvasWidthR - scrollbarDimensions.width);
+						$paneViewport.width(viewportW - canvasWidthR - scrollbarDimensions.width);
+						$viewport.width(viewportW - canvasWidthR);
 						$canvas.width(canvasWidth);
 
-						$paneHeaderR.css('left', viewportW - canvasWidthR)
-						$paneViewportR.css('left', viewportW - canvasWidthR);
-						$paneViewportR.width(canvasWidthR);
+						$paneHeaderR.css('left', viewportW - canvasWidthR - scrollbarDimensions.width)
+						$paneViewportR.css('left', viewportW - canvasWidthR - scrollbarDimensions.width);
+						$paneViewportR.width(canvasWidthR + scrollbarDimensions.width);
 						$canvasR.width(canvasWidthR);
 					} else {
 						$canvas.width(canvasWidth);
@@ -1584,7 +1586,7 @@ if (typeof Slick === "undefined") {
 					rule.right.style.right = (canvasWidth - x - w) + "px";
 				}
 
-				if ((options.leftColumnFrozen && i == (options.leftColumnFrozen - 1)) || (options.rightColumnFrozen && i == (colCount - options.rightColumnFrozen))) {
+				if ((options.leftColumnFrozen && i == (options.leftColumnFrozen - 1)) || (options.rightColumnFrozen && i == (colCount - options.rightColumnFrozen - 1))) {
 					x = 0;
 				} else {
 					x += columns[i].width;
@@ -1665,7 +1667,7 @@ if (typeof Slick === "undefined") {
 				columnPosLeft[i] = x;
 				columnPosRight[i] = x + columns[i].width;
 
-				if ((options.leftColumnFrozen && i == (options.leftColumnFrozen - 1)) || (options.rightColumnFrozen && i == (ii - options.rightColumnFrozen))) {
+				if ((options.leftColumnFrozen && i == (options.leftColumnFrozen - 1)) || (options.rightColumnFrozen && i == (ii - options.rightColumnFrozen - 1))) {
 					x = 0;
 				} else {
 					x += columns[i].width;
@@ -2684,7 +2686,7 @@ if (typeof Slick === "undefined") {
 		}
 
 		function handleScroll() {
-			scrollTop = $viewport[0].scrollTop;
+			scrollTop = options.rightColumnFrozen ? $viewportR[0].scrollTop : $viewport[0].scrollTop;
 			scrollLeft = $viewport[0].scrollLeft;
 			var vScrollDist = Math.abs(scrollTop - prevScrollTop);
 			var hScrollDist = Math.abs(scrollLeft - prevScrollLeft);
@@ -2707,7 +2709,7 @@ if (typeof Slick === "undefined") {
 					$viewportL[0].scrollTop = scrollTop;
 				}
 				if (options.rightColumnFrozen) {
-					$viewportR[0].scrollTop = scrollTop;
+					$viewport[0].scrollTop = scrollTop;
 				}
 
 				// switch virtual pages if needed
