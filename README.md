@@ -4,6 +4,8 @@ So I will keep this repo and add my patch for my specific app requirements.
 
 * added default column sorting function
     reference to example-multi-column-sort.html, example-multi-column-sort-custom.html, example-column-sort.html, example-column-sort-custom.html
+* added column frozen feature
+    reference to example-column-sort-custom.html
 
 # 6pac README follows:
 
