@@ -440,24 +440,42 @@ if (typeof Slick === "undefined") {
 					'overflow-x': 'scroll',
 					'overflow-y': 'hidden'
 				});
-			}
 
-			if (options.rightColumnFrozen) {
-				$viewportR.css({
-					'overflow-x': 'scroll',
-					'overflow-y': 'auto'
-				});
+				if (options.rightColumnFrozen) {
+					$viewportR.css({
+						'overflow-x': 'scroll',
+						'overflow-y': 'auto'
+					});
 
-				$viewport.css({
-					'overflow-x': 'scroll',
-					'overflow-y': 'hidden'
-				});
+					$viewport.css({
+						'overflow-x': 'scroll',
+						'overflow-y': 'hidden'
+					});
+				} else {
+					$viewport.css({
+						'overflow-x': 'scroll',
+						'overflow-y': 'auto'
+					});
+				}
 			} else {
-				$viewport.css({
-					'overflow-x': 'scroll',
-					'overflow-y': 'auto'
-				});
+				if (options.rightColumnFrozen) {
+					$viewportR.css({
+						'overflow-x': 'scroll',
+						'overflow-y': 'auto'
+					});
+
+					$viewport.css({
+						'overflow-x': 'scroll',
+						'overflow-y': 'hidden'
+					});
+				} else {
+					$viewport.css({
+						'overflow-x': 'auto',
+						'overflow-y': 'auto'
+					});
+				}
 			}
+
 		}
 
 		function cacheCssForHiddenInit() {
@@ -2423,6 +2441,7 @@ if (typeof Slick === "undefined") {
 
 			if (options.rightColumnFrozen || options.leftColumnFrozen) {
 				$paneViewport.css('top', $paneHeader.height());
+				$bottomPanel.css('top', $paneHeader.height() + $paneViewport.height());
 
 				if (options.leftColumnFrozen) {
 					$paneViewportL.css('top', $paneHeaderL.height());
