@@ -220,7 +220,7 @@ if (typeof Slick === "undefined") {
 				throw new Error("SlickGrid requires a valid container, " + container + " does not exist in the DOM.");
 			}
 
-			if ((options.leftColumnFrozen && options.leftColumnFrozen >= columns.length) || (options.rightColumnFrozen && options.rightColumnFrozen >= columns.length)) {
+			if ((options.leftColumnFrozen && (options.leftColumnFrozen <= 0 || options.leftColumnFrozen >= columns.length)) || (options.rightColumnFrozen && (options.rightColumnFrozen <= 0 || options.rightColumnFrozen >= columns.length))) {
 				throw new Error("frozen column size is invalid");
 			}
 
@@ -417,7 +417,15 @@ if (typeof Slick === "undefined") {
 				}
 
 				$focusSink.add($focusSink2).on("keydown", handleKeyDown);
-				$canvas.on("keydown", handleKeyDown).on("click", handleClick).on("dblclick", handleDblClick).on("contextmenu", handleContextMenu).on(
+				var $$canvas = $();
+				if (options.leftColumnFrozen) {
+					$$canvas = $$canvas.add($canvasL);
+				}
+				$$canvas = $$canvas.add($canvas);
+				if (options.rightColumnFrozen) {
+					$$canvas = $$canvas.add($canvasR);
+				}
+				$$canvas.on("keydown", handleKeyDown).on("click", handleClick).on("dblclick", handleDblClick).on("contextmenu", handleContextMenu).on(
 					"draginit", handleDragInit).on("dragstart", {
 					distance: 3
 				}, handleDragStart).on("drag", handleDrag).on("dragend", handleDragEnd).on("mouseenter", ".slick-cell", handleMouseEnter).on(
@@ -2441,8 +2449,9 @@ if (typeof Slick === "undefined") {
 
 			if (options.rightColumnFrozen || options.leftColumnFrozen) {
 				$paneViewport.css('top', $paneHeader.height());
-				$bottomPanel.css('top', $paneHeader.height() + $paneViewport.height());
-
+				if ($bottomPanel) {
+					$bottomPanel.css('top', $paneHeader.height() + $paneViewport.height());
+				}
 				if (options.leftColumnFrozen) {
 					$paneViewportL.css('top', $paneHeaderL.height());
 				}
@@ -3428,8 +3437,22 @@ if (typeof Slick === "undefined") {
 
 		function getRowFromNode(rowNode) {
 			for (var row in rowsCache) {
-				if (rowsCache[row].rowNode === rowNode) {
-					return row | 0;
+				var _rowNode = rowsCache[row].rowNode;
+				if (_rowNode) {
+					switch (_rowNode.length) {
+						case 1:
+							if (_rowNode[0] === rowNode) {
+								return row | 0;
+							}
+						case 2:
+							if (_rowNode[0] === rowNode || _rowNode[1] === rowNode) {
+								return row | 0;
+							}
+						case 3:
+							if (_rowNode[0] === rowNode || _rowNode[1] === rowNode || _rowNode[2] === rowNode) {
+								return row | 0;
+							}
+					}
 				}
 			}
 
