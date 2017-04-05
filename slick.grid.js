@@ -2060,7 +2060,14 @@ if (typeof Slick === "undefined") {
 
 			if (prevScrollTop != newScrollTop) {
 				vScrollDir = (prevScrollTop + oldOffset < newScrollTop + offset) ? 1 : -1;
-				$viewport[0].scrollTop = (lastRenderedScrollTop = scrollTop = prevScrollTop = newScrollTop);
+				var _newScrollTop = (lastRenderedScrollTop = scrollTop = prevScrollTop = newScrollTop);
+				$viewport[0].scrollTop = _newScrollTop;
+				if(options.leftColumnFrozen){
+					$viewportL[0].scrollTop = _newScrollTop;
+				}
+				if(options.rightColumnFrozen){
+					$viewportR[0].scrollTop = _newScrollTop;
+				}
 
 				trigger(self.onViewportChanged, {
 					grid: self
