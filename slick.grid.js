@@ -398,10 +398,14 @@ if (typeof Slick === "undefined") {
 					}
 				}
 				$viewport.on("scroll", handleScroll);
+				if (jQuery.fn.mousewheel) {
+					$viewport
+						.bind("mousewheel", _handleMouseWheel);
+				}
 				if (options.rightColumnFrozen) {
 					$viewportR.on("scroll", handleScroll);
 					if (jQuery.fn.mousewheel) {
-						$viewport
+						$viewportR
 							.bind("mousewheel", _handleMouseWheel);
 					}
 				}
@@ -2062,10 +2066,10 @@ if (typeof Slick === "undefined") {
 				vScrollDir = (prevScrollTop + oldOffset < newScrollTop + offset) ? 1 : -1;
 				var _newScrollTop = (lastRenderedScrollTop = scrollTop = prevScrollTop = newScrollTop);
 				$viewport[0].scrollTop = _newScrollTop;
-				if(options.leftColumnFrozen){
+				if (options.leftColumnFrozen) {
 					$viewportL[0].scrollTop = _newScrollTop;
 				}
-				if(options.rightColumnFrozen){
+				if (options.rightColumnFrozen) {
 					$viewportR[0].scrollTop = _newScrollTop;
 				}
 
